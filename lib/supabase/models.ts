@@ -8,7 +8,7 @@ export interface IBoard {
   updated_at: string;
 }
 
-export interface Column {
+export interface IColumn {
   id: string;
   board_id: string;
   title: string;
@@ -18,7 +18,7 @@ export interface Column {
 }
 
 
-export interface Task {
+export interface ITask {
   id: string;
   column_id: string;
   title: string;
