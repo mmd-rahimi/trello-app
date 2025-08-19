@@ -17,21 +17,19 @@ export function useBoards() {
     description?: string;
     color?: string;
   }) {
-    if (!user) throw new Error("user not authenticated");
+    if (!user) throw new Error("User not authenticated");
 
     try {
-      const newBoard = await boardDataService.createBoardWithDedaultColumns(
-        supabase,
+      const newBoard = await boardDataService.createBoardWithDefaultColumns(
+        supabase!,
         {
           ...boardData,
           userId: user.id,
         }
       );
       setBoards((prev) => [newBoard, ...prev]);
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : "Failed to create board."
-      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create board.");
     }
   }
 

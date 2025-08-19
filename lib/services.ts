@@ -36,17 +36,6 @@ export const boardService = {
 
 // column Service
 export const columnService = {
-  //   async getBoards(userId: string): Promise<IBoard[]> {
-  //     const {data, error} = await supabase
-  //       .from("boards")
-  //       .select("*")
-  //       .eq("user_id", userId)
-  //       .order("created_at", { ascending: false });
-
-  //       if(error) throw error
-
-  //       return data || []
-  //   },
 
   async createColumn(
     supabase: SupabaseClient,
