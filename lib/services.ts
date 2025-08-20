@@ -1,11 +1,13 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { creatClient } from "./supabase/client";
 import { IBoard, IColumn } from "./supabase/models";
 
-const supabase = creatClient();
 
 // board Service
+
+
+
 export const boardService = {
+
   async getBoard(supabase: SupabaseClient, boardId: string): Promise<IBoard> {
     const { data, error } = await supabase
       .from("boards")
@@ -16,6 +18,18 @@ export const boardService = {
     if (error) throw error;
 
     return data;
+  },
+
+  async getBoards(supabase: SupabaseClient, userId: string): Promise<IBoard[]> {
+    const { data, error } = await supabase
+      .from("boards")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return data || [];
   },
 
   async createBoard(
