@@ -3,9 +3,19 @@
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useBoards } from "@/lib/hooks/useBoards";
 import { useUser } from "@clerk/nextjs";
-import { Grid3x3, List, Loader2, Plus, Rocket, Trello } from "lucide-react";
+import {
+  Filter,
+  Grid3x3,
+  List,
+  Loader2,
+  Plus,
+  Rocket,
+  Search,
+  Trello,
+} from "lucide-react";
 import React, { useState } from "react";
 
 function DashboardPage() {
@@ -19,13 +29,13 @@ function DashboardPage() {
     });
   };
 
-  if (loading) {
-    return (
-      <div>
-        <Loader2 /> <span>Loading your boards...</span>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div>
+  //       <Loader2 /> <span>Loading your boards...</span>
+  //     </div>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -182,7 +192,22 @@ function DashboardPage() {
                   <List />
                 </Button>
               </div>
+
+              <Button variant="outline" size="sm">
+                <Filter />
+                Filter
+              </Button>
+              <Button onClick={handleCreateBoard}>
+                <Plus />
+                Create Board
+              </Button>
             </div>
+          </div>
+
+          {/* search bar */}
+          <div className="relative mb-4 sm:mb-6">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
+            <Input id="search" placeholder="Search Boards..." className="pl-10"/>
           </div>
         </div>
       </main>
