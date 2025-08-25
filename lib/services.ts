@@ -1,13 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { IBoard, IColumn } from "./supabase/models";
 
-
 // board Service
-
-
-
 export const boardService = {
-
   async getBoard(supabase: SupabaseClient, boardId: string): Promise<IBoard> {
     const { data, error } = await supabase
       .from("boards")
@@ -50,6 +45,20 @@ export const boardService = {
 
 // column Service
 export const columnService = {
+  async getColumns(
+    supabase: SupabaseClient,
+    boardId: string
+  ): Promise<IColumn[]> {
+    const { data, error } = await supabase
+      .from("columns")
+      .select("*")
+      .eq("board_id", boardId)
+      .order("sort_order", { ascending: true });
+
+    if (error) throw error;
+
+    return data || [];
+  },
 
   async createColumn(
     supabase: SupabaseClient,
@@ -69,6 +78,21 @@ export const columnService = {
 
 // board data Service
 export const boardDataService = {
+  
+  async getBoardWithColumns(supabase: SupabaseClient, boardId: string) {
+    const [board, columns] = await Promise.all([
+      boardService.getBoard(supabase, boardId),
+      columnService.getColumns(supabase, boardId),
+    ]);
+
+    if (!board) throw new Error("board not found");
+
+    return {
+      board,
+      columns,
+    };
+  },
+
   async createBoardWithDefaultColumns(
     supabase: SupabaseClient,
     boardData: {
@@ -102,6 +126,6 @@ export const boardDataService = {
       )
     );
 
-    return board
+    return board;
   },
 };
