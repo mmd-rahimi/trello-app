@@ -12,7 +12,6 @@ export function useBoards() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
   useEffect(() => {
     if (user) {
       loadBoards();
@@ -60,17 +59,14 @@ export function useBoards() {
   return { boards, loading, error, createBoard };
 }
 
-
-
-export function useBoard (boardId: string) {
-
+export function useBoard(boardId: string) {
   const [board, setBoard] = useState<IBoard | null>(null);
   const [columns, setColumns] = useState<IColumn[]>([]);
   const { supabase } = useSupabase();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+  useEffect(() => {
     if (boardId) {
       loadBoard();
     }
@@ -82,7 +78,10 @@ export function useBoard (boardId: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await boardDataService.getBoardWithColumns(supabase!, boardId);
+      const data = await boardDataService.getBoardWithColumns(
+        supabase!,
+        boardId
+      );
       setBoard(data.board);
       setColumns(data.columns);
     } catch (err) {
@@ -92,10 +91,27 @@ export function useBoard (boardId: string) {
     }
   }
 
+  async function updateBoard(boardId: string, updates: Partial<IBoard>) {
+    try {
+      const updatedBoard = await boardService.updateBoard(
+        supabase!,
+        boardId,
+        updates
+      );
+      setBoard(updatedBoard);
+      return updatedBoard;
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to update the board."
+      );
+    }
+  }
+
   return {
     board,
     columns,
     loading,
-    error
-  }
+    error,
+    updateBoard
+  };
 }

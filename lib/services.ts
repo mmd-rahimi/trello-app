@@ -41,6 +41,23 @@ export const boardService = {
 
     return data;
   },
+
+  async updateBoard(
+    supabase: SupabaseClient,
+    boardId: string,
+    updates: Partial<IBoard>
+  ): Promise<IBoard> {
+    const { data, error } = await supabase
+      .from("boards")
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq("id", boardId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  },
 };
 
 // column Service
@@ -78,7 +95,6 @@ export const columnService = {
 
 // board data Service
 export const boardDataService = {
-  
   async getBoardWithColumns(supabase: SupabaseClient, boardId: string) {
     const [board, columns] = await Promise.all([
       boardService.getBoard(supabase, boardId),

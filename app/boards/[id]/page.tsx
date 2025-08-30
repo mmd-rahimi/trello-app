@@ -16,11 +16,24 @@ import React, { useState } from "react";
 
 function BoardPage() {
   const { id } = useParams<{ id: string }>();
-  const { board } = useBoard(id);
+  const { board, updateBoard } = useBoard(id);
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newColor, setNewColor] = useState("false");
+
+  async function handleUpdateBoard(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newTitle.trim() || !board) return;
+
+    try {
+      await updateBoard(board.id, {
+        title: newTitle.trim(),
+        color: newColor || board.color,
+      });
+      setIsEditingTitle(false);
+    } catch (error) {}
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -38,7 +51,7 @@ function BoardPage() {
           <DialogHeader>
             <DialogTitle>Edit Board</DialogTitle>
           </DialogHeader>
-          <form className="space-y-4">
+          <form onSubmit={handleUpdateBoard} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="boardTitle">Board Title</Label>
               <Input
@@ -82,8 +95,14 @@ function BoardPage() {
             </div>
 
             <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsEditingTitle(false)}>Cancel</Button>
-                <Button type="submit">Save Changes</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditingTitle(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit">Save Changes</Button>
             </div>
           </form>
         </DialogContent>
