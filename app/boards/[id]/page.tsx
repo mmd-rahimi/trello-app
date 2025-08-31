@@ -21,6 +21,7 @@ function BoardPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newColor, setNewColor] = useState("false");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   async function handleUpdateBoard(e: React.FormEvent) {
     e.preventDefault();
@@ -44,6 +45,8 @@ function BoardPage() {
           setNewColor(board?.color ?? "");
           setIsEditingTitle(true);
         }}
+        onFilterClick={() => setIsFilterOpen(true)}
+        filterCount={2}
       />
 
       <Dialog open={isEditingTitle} onOpenChange={setIsEditingTitle}>
@@ -79,9 +82,9 @@ function BoardPage() {
                   "bg-teal-500",
                   "bg-cyan-500",
                   "bg-emerald-500",
-                ].map((color) => (
+                ].map((color, key) => (
                   <button
-                    key={color}
+                    key={key}
                     type="button"
                     className={`w-8 h-8 rounded-full cursor-pointer transition duration-200 ${color} ${
                       color === newColor
@@ -105,6 +108,56 @@ function BoardPage() {
               <Button type="submit">Save Changes</Button>
             </div>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <DialogContent className="w-[95vw] max-w-[425px] mx-auto">
+          <DialogHeader>
+            <DialogTitle>Filter Tasks</DialogTitle>
+            <p className="text-sm text-gray-600">
+              Filter tasks by priority, assignee, or due date
+            </p>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Priority */}
+            <div className="space-y-2">
+              <Label>Priority</Label>
+              <div className="flex flex-wrap gap-2">
+                {["low", "medium", "high"].map((priority, key) => (
+                  <Button key={key} variant="outline" size="sm">
+                    {priority.charAt(0).toUpperCase() + priority.slice(1)}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            {/* Assignee */}
+
+            {/* <div className="space-y-2">
+              <Label>Assignee</Label>
+              <div className="flex flex-wrap gap-2">
+                {["low", "medium", "high"].map((priority, key) => (
+                  <Button key={key} variant="outline" size="sm">{priority.charAt(0).toUpperCase() + priority.slice(1)}</Button>
+                ))}
+              </div>
+            </div> */}
+
+            {/* Due Date */}
+            <div className="space-y-2">
+              <Label>Due Date</Label>
+              <Input type="date" />
+            </div>
+
+            {/* Clear and Apply buttons */}
+            <div className="flex justify-between pt-4">
+              <Button type="button" variant="outline">
+                Clear Filters
+              </Button>
+              <Button type="button" onClick={() => setIsFilterOpen(false)}>
+                Apply Filters
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
